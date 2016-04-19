@@ -9,16 +9,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.provider.Settings.Secure;
 
 public class MainActivity extends Activity {
 
 	private Socket server;
+	private String android_id;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        android_id = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
         //following should be moved to onClick buttons 
     }
     
@@ -44,6 +47,7 @@ public class MainActivity extends Activity {
     	protected Void doInBackground(Integer... params) {
 	    	try {
 	    	 	server = new Socket("192.168.1.4", 12345);
+	    	 	server.getOutputStream().write(android_id.getBytes("UTF-8"));
 	    	 	server.getOutputStream().write(params[0]);
 	    		server.close(); // closing the connection
 	    	 
